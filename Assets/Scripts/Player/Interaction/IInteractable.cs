@@ -2,7 +2,7 @@
 {
     public interface IInteractable
     {
-        public void Interact();
-        public void AltInteract();
+        public void Interact(PlayerManager player);
+        public void AltInteract(PlayerManager player);
     }
 }

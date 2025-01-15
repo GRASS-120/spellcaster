@@ -55,9 +55,8 @@ namespace Player
         [SerializeField] private Transform cameraTarget;
         
         [Header("Movement params")]
-        [SerializeField] private float moveSpeed = 13f;
-        [SerializeField] private float sprintSpeed = 20f;
-        [SerializeField] private float crouchSpeed = 7f;
+        [SerializeField] private float sprintSpeedMult = 1.5f;
+        [SerializeField] private float crouchSpeedMult = 0.5f;
         
         [Header("Movement animation params")]
         [SerializeField] private float moveResponse = 25f;
@@ -92,7 +91,14 @@ namespace Player
         private PlayerControllerState _tempState;  // временная замена _lastState... (оно нужно, чтобы UpdateVelocity и rotation успевали чекать  _lastState....)
 
         public PlayerControllerState State => _state;
-        private PlayerControllerState LastState => _lastState;
+        public PlayerControllerState LastState => _lastState;
+        public KinematicCharacterMotor Motor => motor;
+        public Collider GroundCollider => _groundCollider;
+
+        private PlayerManager _player;
+        private float _moveSpeed;
+        private float _sprintSpeed;
+        private float _crouchSpeed;
         
         private Quaternion _requestedRotation;
         private Vector3 _requestedMovement;
@@ -108,15 +114,22 @@ namespace Player
         private bool _ungroundedDueToJump;
 
         private Collider[] _uncrouchOverlapResult;
+        private Collider _groundCollider;
 
         public Transform CameraTarget => cameraTarget;
         
-        public void Init()
+        public void Init(PlayerManager player)
         {
+            _player = player;
             _state.Stance = Stance.Walk;
             _lastState = _state;
             _uncrouchOverlapResult = new Collider[8];
             motor.CharacterController = this;
+            
+            // скорость
+            _moveSpeed = _player.Stats.MoveSpeed;
+            _sprintSpeed = _moveSpeed * sprintSpeedMult;
+            _crouchSpeed = _moveSpeed * crouchSpeedMult;
         }
         
         public void HandleInput(CharacterInput input)
@@ -171,6 +184,11 @@ namespace Player
             {
                 _requestedCrouchInAir = false;
             }
+            
+            // скорость (что б меналась скорость спринта и приседа при изменении MoveSpeed
+            _moveSpeed = _player.Stats.MoveSpeed;
+            _sprintSpeed = _moveSpeed * sprintSpeedMult;
+            _crouchSpeed = _moveSpeed * crouchSpeedMult;
         }
 
         // TODO: когда добавлю модельку, сделать так, чтобы менялся хитбокс? + не нужно скукоживать, просто моделька приседает
@@ -277,8 +295,8 @@ namespace Player
                 {
                     if (_requestedSprint && !_requestedCrouch) _state.Stance = Stance.Sprint;
                     
-                    var efficientSpeed = _requestedSprint ? sprintSpeed : moveSpeed;
-                    var speed = _state.Stance is Stance.Walk or Stance.Sprint ? efficientSpeed : crouchSpeed;
+                    var efficientSpeed = _requestedSprint ? _sprintSpeed : _moveSpeed;
+                    var speed = _state.Stance is Stance.Walk or Stance.Sprint ? efficientSpeed : _crouchSpeed;
                     var response = _state.Stance is Stance.Walk or Stance.Sprint ? moveResponse : crouchResponse;
 
                     // + плавность (targetVelocity - скорость, которую мы хотим набрать по сути)
@@ -526,6 +544,8 @@ namespace Player
 
         public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
         {
+            _groundCollider = hitCollider;
+            // Debug.Log(hitCollider);
         }
 
         public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint,

@@ -1,7 +1,11 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using Interactable;
 using Player.CameraEffects;
 using Player.Interaction;
 using Player.VFX;
+using StatsManager;
+using StatsManager.StatsTypes;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,25 +21,33 @@ namespace Player
     /// Связывает PlayerCharacter, PlayerInputManager и PlayerCamera. То есть, получаем команду от игрока
     /// после нажатия на кнопку => формируем запрос с измененными данными => меняються значения в камере и в персонаже
     /// </summary>
-    public class PlayerManager : MonoBehaviour
+    public class PlayerManager : MonoBehaviour, IItemVisitable
     {
+        // TODO: LOCAL INSTANCE OF HP AND MANA! 
+        
         [Header("Entities")]
         [SerializeField] private PlayerController playerController;
         [SerializeField] private PlayerCamera playerCamera;
         [SerializeField] private PlayerInputManager input;
+        [SerializeField, Required] private BaseStats baseStats;
         [Header("VFX")]
         [SerializeField] private Volume volume;
         [SerializeField] private StanceVignette stanceVignette;
 
+        public Stats Stats { get; private set; }
+        
         public PlayerInputManager Input => input;
-        public Collider PlayerCollider => playerController.GetComponent<Collider>();
+        public PlayerController PlayerController => playerController;
+        public Stance Stance => playerController.State.Stance;
         public PlayerCamera Camera => playerCamera;
+        public PlayerInteractor Interactor => _interactor;
 
         private PlayerInteractor _interactor;
 
         private void Awake()
         {
             _interactor = GetComponent<PlayerInteractor>();
+            Stats = new Stats(new StatsMediator(), baseStats);
         }
 
         private void Start()
@@ -43,7 +55,7 @@ namespace Player
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             
-            playerController.Init();
+            playerController.Init(this);
             playerCamera.Init(playerController.CameraTarget);
             
             _interactor.Init();
@@ -53,8 +65,9 @@ namespace Player
 
         private void Update()
         {
+            Stats.Mediator.Update(Time.deltaTime);
+
             var cameraInput = new CameraInput {Look = input.LookDir};
-            var deltaTime = Time.deltaTime;
             
             playerCamera.UpdateRotation(cameraInput);
 
@@ -71,18 +84,9 @@ namespace Player
             };
             
             playerController.HandleInput(characterInput);
-            playerController.UpdateBody(deltaTime);
+            playerController.UpdateBody(Time.deltaTime);
             
-            #if UNITY_EDITOR
-            if (Keyboard.current.tKey.wasPressedThisFrame)
-            {
-                var ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-                if (Physics.Raycast(ray, out var hit))
-                {
-                    Teleport(hit.point);
-                }
-            }
-            #endif
+            Debug.Log(Stats);
         }
 
         // изменять камеру лучше в LateUpdate
@@ -94,16 +98,13 @@ namespace Player
             
             playerCamera.UpdatePosition(cameraTarget);
             playerCamera.UpdateEffects(cameraTarget, state, deltaTime);
-            // cameraSpring.UpdateSpring(deltaTime, cameraTarget.up);
-            // cameraLean.UpdateLean(deltaTime, state.Stance is Stance.Slide, state.Acceleration, cameraTarget.up);
-            // cameraSprint.UpdateSprintEffect(deltaTime, state.Stance is Stance.Sprint);
-            
+
             stanceVignette.UpdateVignette(deltaTime, state.Stance);
         }
 
-        public void Teleport(Vector3 position)
+        public void Accept(IItemVisitor visitor)
         {
-            playerController.SetPosition(position);
+            visitor.Visit(this);
         }
     }
 }

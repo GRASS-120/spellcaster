@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace FiniteStateMachine
 {
+    // обавить описание работы (есть в чат гпт. но попытайся сначала сам!
     public class StateMachine
     {
         private StateNode _current;
@@ -26,6 +27,11 @@ namespace FiniteStateMachine
         public void FixedUpdate()
         {
             _current.State?.FixedUpdate();
+        }
+
+        public void SetState(IState state)
+        {
+            _current = _nodes[state.GetType()];
         }
 
         private void ChangeState(IState state)
@@ -94,7 +100,7 @@ namespace FiniteStateMachine
             public StateNode(IState state)
             {
                 State = state;
-                Transitions = new HashSet<ITransition>();
+                Transitions = new HashSet<ITransition>();  // possible transitions
             }
 
             public void AddTransition(IState to, IPredicate condition)

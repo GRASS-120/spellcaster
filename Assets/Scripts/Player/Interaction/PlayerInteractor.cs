@@ -1,10 +1,17 @@
-﻿using Player.Input;
+﻿using System;
+using Player.Input;
 using UnityEngine;
+
+// add state machine?
+// detect, none - сделать так чтобы не постоянно вызывалась функция а только при том что состояние меняются 
 
 namespace Player.Interaction
 {
     public class PlayerInteractor : MonoBehaviour, IInteractor
     {
+        public event Action<bool> OnDetectSmth;
+        public event Action<IInteractable> OnDetectInteractable;
+        
         [Header("Entities")]
         [SerializeField] private Transform interactorSource;
         [Header("Interaction params")]
@@ -19,12 +26,16 @@ namespace Player.Interaction
         {
             _player = GetComponent<PlayerManager>();
             _input = _player.Input;
-            InteractorSource = interactorSource;  // стоит ли так делать?
-            
+            InteractorSource = interactorSource; // стоит ли так делать?
+
             _input.OnInteract += HandleInteractions;
             _input.OnAltInteract += HandleAltInteractions;
         }
 
+        public void Update()
+        {
+            Detect();
+        }
 
         public void HandleInteractions()
         {
@@ -33,7 +44,7 @@ namespace Player.Interaction
             {
                 if (hit.collider.gameObject.TryGetComponent(out IInteractable interactable))
                 {
-                    interactable.Interact();
+                    interactable.Interact(_player);
                 }
             }
         }
@@ -46,8 +57,26 @@ namespace Player.Interaction
             {
                 if (hit.collider.gameObject.TryGetComponent(out IInteractable interactable))
                 {
-                    interactable.AltInteract();
+                    interactable.AltInteract(_player);
                 }
+            }
+        }
+
+        private void Detect()
+        {
+            var r = new Ray(InteractorSource.position, InteractorSource.forward);
+            if (Physics.Raycast(r, out RaycastHit hit, interactRange))
+            {
+                if (hit.collider.gameObject.TryGetComponent(out IInteractable interactable))
+                {
+                    OnDetectSmth?.Invoke(true);
+                } else
+                {
+                    OnDetectSmth?.Invoke(false);
+                } 
+            } else
+            {
+                OnDetectSmth?.Invoke(false);
             }
         }
     }

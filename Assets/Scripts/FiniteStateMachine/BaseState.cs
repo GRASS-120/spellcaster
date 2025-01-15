@@ -3,41 +3,36 @@ using UnityEngine;
 
 namespace FiniteStateMachine
 {
-    public abstract class BaseState : IState
+    // можно добавить наследования для разных целей (player state... etc)
+    // TODO: переделать на generic? так как в разных контекстах будет использоватся
+    public abstract class BaseState<T1, T2> : IState
     {
-        protected readonly PlayerController _player;
-        protected readonly Animator _animator;
-
-        protected static readonly int LocomotionHash = Animator.StringToHash("");
-        protected static readonly int JumpHash = Animator.StringToHash("");
-
-        protected const float CROSS_FADE_DUTATION = 0.1f;
-
-        protected BaseState(PlayerController player, Animator animator)
+        protected readonly T1 _actor;
+        protected readonly T2 _data;
+        protected BaseState(T1 actor, T2 data)
         {
-            this._player = player;
-            this._animator = animator;
+            _actor = actor;
+            _data = data;
         }
 
-        
         public virtual void OnEnter()
         {
-            // 
+            // nope
         }
 
         public virtual void Update()
         {
-            // 
+            // nope
         }
 
         public virtual void FixedUpdate()
         {
-            // 
+            // nope
         }
 
         public virtual void OnExit()
         {
-            // 
+            // nope
         }
     }
 }

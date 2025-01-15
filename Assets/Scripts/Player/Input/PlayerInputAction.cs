@@ -107,6 +107,15 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftMouse"",
+                    ""type"": ""Button"",
+                    ""id"": ""bc6742af-0468-47ec-9ec7-e278b8415ee3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -245,7 +254,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2c71e74f-304a-4cec-86d6-39f36f70c62b"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -261,6 +270,17 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ThrowItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""55ea2078-a349-45db-9483-01ba71f14cdd"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftMouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -280,6 +300,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Gameplay_AltInteract = m_Gameplay.FindAction("AltInteract", throwIfNotFound: true);
         m_Gameplay_RotateItem = m_Gameplay.FindAction("RotateItem", throwIfNotFound: true);
         m_Gameplay_ThrowItem = m_Gameplay.FindAction("ThrowItem", throwIfNotFound: true);
+        m_Gameplay_LeftMouse = m_Gameplay.FindAction("LeftMouse", throwIfNotFound: true);
     }
 
     ~@PlayerInputAction()
@@ -355,6 +376,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_AltInteract;
     private readonly InputAction m_Gameplay_RotateItem;
     private readonly InputAction m_Gameplay_ThrowItem;
+    private readonly InputAction m_Gameplay_LeftMouse;
     public struct GameplayActions
     {
         private @PlayerInputAction m_Wrapper;
@@ -368,6 +390,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         public InputAction @AltInteract => m_Wrapper.m_Gameplay_AltInteract;
         public InputAction @RotateItem => m_Wrapper.m_Gameplay_RotateItem;
         public InputAction @ThrowItem => m_Wrapper.m_Gameplay_ThrowItem;
+        public InputAction @LeftMouse => m_Wrapper.m_Gameplay_LeftMouse;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -404,6 +427,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @ThrowItem.started += instance.OnThrowItem;
             @ThrowItem.performed += instance.OnThrowItem;
             @ThrowItem.canceled += instance.OnThrowItem;
+            @LeftMouse.started += instance.OnLeftMouse;
+            @LeftMouse.performed += instance.OnLeftMouse;
+            @LeftMouse.canceled += instance.OnLeftMouse;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -435,6 +461,9 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @ThrowItem.started -= instance.OnThrowItem;
             @ThrowItem.performed -= instance.OnThrowItem;
             @ThrowItem.canceled -= instance.OnThrowItem;
+            @LeftMouse.started -= instance.OnLeftMouse;
+            @LeftMouse.performed -= instance.OnLeftMouse;
+            @LeftMouse.canceled -= instance.OnLeftMouse;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -463,5 +492,6 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         void OnAltInteract(InputAction.CallbackContext context);
         void OnRotateItem(InputAction.CallbackContext context);
         void OnThrowItem(InputAction.CallbackContext context);
+        void OnLeftMouse(InputAction.CallbackContext context);
     }
 }

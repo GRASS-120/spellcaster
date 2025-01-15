@@ -3,13 +3,12 @@ using System.Collections.Generic;
 
 namespace FiniteStateMachine
 {
-    // обавить описание работы (есть в чат гпт. но попытайся сначала сам!
     public class StateMachine
     {
         private StateNode _current;
         // Type - в качестве ключа в словаре используеться тип данных => каждому типу соответствует свой StateNode
         private Dictionary<Type, StateNode> _nodes = new();
-        private HashSet<ITransition> _anyTransitions = new();  // ? зачем
+        private HashSet<ITransition> _anyTransitions = new(); 
 
         public IState CurrentState => _current.State;
         
@@ -39,20 +38,12 @@ namespace FiniteStateMachine
             if (state == _current.State) return;
 
             var previousState = _current.State;
-            var nextState = _nodes[state.GetType()].State;  // GetType = ключ
+            var nextState = _nodes[state.GetType()].State;
             
             previousState?.OnExit();
             nextState?.OnEnter();
             _current = _nodes[state.GetType()];
         }
-        
-        // public void AddTransition<T>(IState from, IState to, T condition) {
-        //     GetOrAddNode(from).AddTransition(GetOrAddNode(to).State, condition);
-        // }
-        //
-        // public void AddAnyTransition<T>(IState to, T condition) {
-        //     _anyTransitions.Add(new Transition<T>(GetOrAddNode(to).State, condition));
-        // }
 
         public void AddTransition(IState from, IState to, IPredicate condition)
         {

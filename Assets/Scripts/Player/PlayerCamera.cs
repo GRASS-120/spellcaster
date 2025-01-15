@@ -17,7 +17,7 @@ namespace Player
         [Header("Params")]
         [Range(0f, 1f)][SerializeField] private float sensitivity = 0.1f;
         
-        // выделяем в отдельную переменную, так как eulerAngles в Quaternions ведет себя непредсказуемо
+        // выделяем в отдельную переменную, так как eulerAngles в Quaternions ведет себя непредсказуемо***
         private Vector3 _eulerAngles;  
         
         public void Init(Transform target)

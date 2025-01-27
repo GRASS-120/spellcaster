@@ -57,7 +57,7 @@ namespace Interactable.Items.PropHoldable
 
         public StatModifierSO GetStatModifier()
         {
-            // когда игрок несет PropHoldable, то его MoveSpeed уменьшается (то, насколько, зависит от массы)
+            // когда игрок несет PropHoldable, то его MoveSpeed уменьшается (то, насколько - зависит от массы)
             var modifier = ScriptableObject.CreateInstance<StatModifierSO>();
             var modifierList = new List<StatModifierSO.StatModifierParams>();
             var deceleration = GetComponent<Rigidbody>().mass / 10f;

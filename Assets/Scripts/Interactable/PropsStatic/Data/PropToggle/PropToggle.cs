@@ -81,7 +81,7 @@ namespace Interactable.PropsStatic.Data.PropToggle
 
             public override void OnEnter()
             {
-                _actor.DORotate(_data.animatedObjectPos2, _data.duration, RotateMode.Fast);
+                // _actor.DORotate(_data.animatedObjectPos2, _data.duration, RotateMode.Fast);
             }
         }
     }

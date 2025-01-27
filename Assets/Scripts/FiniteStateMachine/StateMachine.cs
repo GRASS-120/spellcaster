@@ -6,16 +6,15 @@ namespace FiniteStateMachine
     public class StateMachine
     {
         private StateNode _current;
-        // Type - в качестве ключа в словаре используеться тип данных => каждому типу соответствует свой StateNode
-        private Dictionary<Type, StateNode> _nodes = new();
-        private HashSet<ITransition> _anyTransitions = new(); 
-
+        private Dictionary<Type, StateNode> _nodes = new();  // Type - в качестве ключа в словаре используеться тип данных => каждому типу соответствует свой StateNode
+        private HashSet<ITransition> _anyTransitions = new();  // переходы, которые срабатывают независимо от того, в каком состоянии мы находимся
+        
         public IState CurrentState => _current.State;
         
         public void Update()
         {
             var transition = GetTransition();
-            if (transition != null)
+            if (transition != null)  // если есть переход, для которого выполнено условие
             {
                 ChangeState(transition.To);
             }
@@ -68,6 +67,7 @@ namespace FiniteStateMachine
             return node;
         }
 
+        // 
         private ITransition GetTransition()
         {
             foreach (var transition in _anyTransitions)

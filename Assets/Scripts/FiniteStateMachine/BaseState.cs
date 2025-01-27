@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace FiniteStateMachine
 {
-    // можно добавить наследования для разных целей (player state... etc)
-    // TODO: переделать на generic? так как в разных контекстах будет использоватся
+    // пока универсальное состояние
     public abstract class BaseState<T1, T2> : IState
     {
         protected readonly T1 _actor;

@@ -1,6 +1,4 @@
-﻿using Player;
-
-namespace StatsManager
+﻿namespace StatsManager
 {
     public interface IHasStatModifier
     {

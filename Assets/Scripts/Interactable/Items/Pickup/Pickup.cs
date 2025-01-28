@@ -1,4 +1,5 @@
-﻿using Player;
+﻿using Entity.Player;
+using Player;
 
 namespace Interactable.Items.Pickup
 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using DG.Tweening;
+using Entity.Player;
 using FiniteStateMachine;
 using Player;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace Interactable.PropsStatic.Data.PropToggle
         private StateMachine _stateMachine;
         private OpenState _openState;
         private CloseState _closeState;
-        private LockedState _lockedState;
+        // private LockedState _lockedState;
 
         private void Awake()
         {
@@ -24,9 +25,9 @@ namespace Interactable.PropsStatic.Data.PropToggle
             _stateMachine = new StateMachine();
             _openState = new OpenState(transform, _propData);
             _closeState = new CloseState(transform, _propData);
-            _lockedState = new LockedState(transform, _propData);
+            // _lockedState = new LockedState(transform, _propData);
             
-            Any(_lockedState, new FuncPredicate(() => _propData.isLocked));  // дорабоать нужно когда сделаю замок -> когда сделааю инвентарь
+            // Any(_lockedState, new FuncPredicate(() => _propData.isLocked));  // дорабоать нужно когда сделаю замок -> когда сделааю инвентарь
             At(_closeState, _openState, new FuncPredicate(() => _openClose && !_propData.isLocked));
             At(_openState, _closeState, new FuncPredicate(() => !_openClose && !_propData.isLocked));
             // + locked state
@@ -55,34 +56,48 @@ namespace Interactable.PropsStatic.Data.PropToggle
         public void Any(IState to, IPredicate condition) =>
             _stateMachine.AddAnyTransition(to, condition);
         
-        private class OpenState : BaseState<Transform, PropToggleSO>
+        private class OpenState : BaseState
         {
-            public OpenState(Transform tr, PropToggleSO data) : base(tr, data) { }
+            private Transform _tr;
+            private PropToggleSO _data;
+
+            public OpenState(Transform tr, PropToggleSO data)
+            {
+                _tr = tr;
+                _data = data;
+            }
 
             public override void OnEnter()
             {
-                _actor.DORotate(_data.animatedObjectPos1, _data.duration, RotateMode.Fast);
+                _tr.DORotate(_data.animatedObjectPos1, _data.duration, RotateMode.Fast);
             }
         }
         
-        private class CloseState : BaseState<Transform, PropToggleSO>
+        private class CloseState : BaseState
         {
-            public CloseState(Transform tr, PropToggleSO data) : base(tr, data) { }
+            private Transform _tr;
+            private PropToggleSO _data;
+
+            public CloseState(Transform tr, PropToggleSO data)
+            {
+                _tr = tr;
+                _data = data;
+            }
 
             public override void OnEnter()
             {
-                _actor.DORotate(_data.animatedObjectPos2, _data.duration, RotateMode.Fast);
+                _tr.DORotate(_data.animatedObjectPos2, _data.duration, RotateMode.Fast);
             }
         }
 
-        private class LockedState : BaseState<Transform, PropToggleSO>
-        {
-            public LockedState(Transform tr, PropToggleSO data) : base(tr, data) { }
-
-            public override void OnEnter()
-            {
-                // _actor.DORotate(_data.animatedObjectPos2, _data.duration, RotateMode.Fast);
-            }
-        }
+        // private class LockedState : BaseState<Transform, PropToggleSO>
+        // {
+        //     public LockedState(Transform tr, PropToggleSO data) : base(tr, data) { }
+        //
+        //     public override void OnEnter()
+        //     {
+        //         // _actor.DORotate(_data.animatedObjectPos2, _data.duration, RotateMode.Fast);
+        //     }
+        // }
     }
 }

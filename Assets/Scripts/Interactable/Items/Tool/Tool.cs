@@ -1,4 +1,5 @@
-﻿using Interactable.Items;
+﻿using Entity.Player;
+using Interactable.Items;
 using Player;
 using Player.Items;
 using UnityEngine;

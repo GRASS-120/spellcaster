@@ -1,6 +1,7 @@
 ﻿using System;
+using Entity.Player;
+using Entity.Player.Interaction;
 using Player;
-using Player.Interaction;
 using Player.Items;
 using UnityEngine;
 

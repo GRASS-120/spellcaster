@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Player;
+using Entity;
+using Entity.Player;
 using StatsManager.StatsTypes;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ namespace StatsManager
 
         [SerializeField] public List<StatModifierParams> statModifierList;
         
-        public void ApplyModifierEffect(PlayerManager player, IHasStatModifier source)
+        public void ApplyModifierEffect(IEntity entity, IHasStatModifier source)
         {
             foreach (var item in statModifierList) {
                 var (modifier, priority) = item.operationType switch {
@@ -31,7 +32,7 @@ namespace StatsManager
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-                player.Stats.Mediator.AddModifier(modifier, priority);
+                entity.Stats.Mediator.AddModifier(modifier, priority);
             }
         }
 

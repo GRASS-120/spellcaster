@@ -1,9 +1,12 @@
 ﻿using System;
+using Entity.Enemy.State;
 using FiniteStateMachine;
 using StatsManager;
 using StatsManager.StatsTypes;
 using UnityEngine;
 using UnityEngine.AI;
+
+// TODO: пока переходы между анимациями контролируются через код, а не через аниматор. потом нверное нужно исправить... или так лучше?
 
 namespace Entity.Enemy
 {
@@ -13,21 +16,23 @@ namespace Entity.Enemy
         [SerializeField] private NavMeshAgent agent;
         [SerializeField] private Animator animator;
         [SerializeField] private BaseStats baseStats;
-        
-        // потом перенести в другой скрипт
-        protected static readonly int IdleHash = Animator.StringToHash("Idle");
-        protected static readonly int WalkHash = Animator.StringToHash("Walk");
-        protected static readonly int RunHash = Animator.StringToHash("Run");
-        protected const float CrossFadeDuration = 0.1f;
-        
+        [SerializeField] private float wanderRadius = 10f;
+
         public Stats Stats { get; set; }
 
         private StateMachine _stateMachine;
 
-        private void Awake()
+        private void Start()
         {
             Stats = new Stats(new StatsMediator(), baseStats);
             _stateMachine = new StateMachine();
+
+            var wanderState = new EnemyWanderState(this, animator, agent, wanderRadius);
+
+            Any(wanderState, new FuncPredicate(() => true)); 
+            
+            
+            _stateMachine.SetState(wanderState);
         }
 
         private void Update()
@@ -37,44 +42,8 @@ namespace Entity.Enemy
 
         public void At(IState from, IState to, IPredicate condition) =>
             _stateMachine.AddTransition(from, to, condition);
-
-        public void Any(IState to, IPredicate condition) => _stateMachine.AddAnyTransition(to, condition);
-
-        public class EnemyWanderState : BaseState  //TODO: нужно делать дочерные стейты - отдельно для EnemyState, отдельно для PropToggle и тп 
-        {
-            private EnemyManager _enemy;
-            private Animator _animator;
-            private NavMeshAgent _agent;
-            private float _wanderRadius;
-            private Vector3 _startPoint;
-            
-            public EnemyWanderState(EnemyManager enemy, Animator animator, NavMeshAgent agent, float wanderRadius, Vector3 startPoint)
-            {
-                _enemy = enemy;
-                _animator = animator;
-                _agent = agent;
-                _wanderRadius = wanderRadius;
-                _startPoint = startPoint;
-            }
-
-            public override void OnEnter()
-            {
-                _animator.CrossFade(WalkHash, CrossFadeDuration);
-            }
-
-            public override void Update()
-            {
-                
-            }
-
-            private bool HasReachedDestination()
-            {
-                // путь не расчитывается в данный момент И
-                // агент вошел в радиус, в котором точка считается достигнутой И (stoppingDistance нужен, чтобы враг не входил в игрока, а был рядом с ним)
-                // (агент стоит на месте ИЛИ нет муршрута)
-                return !_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance &&
-                       (!_agent.hasPath || _agent.velocity.sqrMagnitude == 0f);
-            }
-        }
+        
+        public void Any(IState to, IPredicate condition) =>
+            _stateMachine.AddAnyTransition(to, condition);
     }
 }

@@ -7,14 +7,6 @@ namespace FiniteStateMachine
     // TODO: делать через дженерики - так себе. убрать вообще поля?
     public abstract class BaseState : IState
     {
-        // protected readonly T1 _actor;
-        // protected readonly T2 _data;
-        // protected BaseState(T1 actor, T2 data)
-        // {
-        //     _actor = actor;
-        //     _data = data;
-        // }
-
         public virtual void OnEnter()
         {
             // nope

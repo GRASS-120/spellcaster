@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace FiniteStateMachine
 {
@@ -30,6 +31,7 @@ namespace FiniteStateMachine
         public void SetState(IState state)
         {
             _current = _nodes[state.GetType()];
+            _current.State?.OnEnter();
         }
 
         private void ChangeState(IState state)
@@ -39,6 +41,7 @@ namespace FiniteStateMachine
             var previousState = _current.State;
             var nextState = _nodes[state.GetType()].State;
             
+            Debug.Log("chenge state");
             previousState?.OnExit();
             nextState?.OnEnter();
             _current = _nodes[state.GetType()];

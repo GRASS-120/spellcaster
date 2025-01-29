@@ -69,6 +69,7 @@ namespace Interactable.PropsStatic.Data.PropToggle
 
             public override void OnEnter()
             {
+                Debug.Log("open");
                 _tr.DORotate(_data.animatedObjectPos1, _data.duration, RotateMode.Fast);
             }
         }
@@ -86,6 +87,8 @@ namespace Interactable.PropsStatic.Data.PropToggle
 
             public override void OnEnter()
             {
+                Debug.Log("close");
+
                 _tr.DORotate(_data.animatedObjectPos2, _data.duration, RotateMode.Fast);
             }
         }

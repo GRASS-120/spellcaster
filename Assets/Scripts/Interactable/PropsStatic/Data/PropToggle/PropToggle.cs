@@ -56,6 +56,7 @@ namespace Interactable.PropsStatic.Data.PropToggle
         public void Any(IState to, IPredicate condition) =>
             _stateMachine.AddAnyTransition(to, condition);
         
+        // TODO: сделать базовый класс статов для interactable'ов
         private class OpenState : BaseState
         {
             private Transform _tr;

@@ -3611,6 +3611,7 @@ GameObject:
   - component: {fileID: 3523707988698697952}
   - component: {fileID: 480511063780299815}
   - component: {fileID: 2627474665225878947}
+  - component: {fileID: 2571654685180119974}
   m_Layer: 0
   m_Name: SkeletonWarrior
   m_TagString: Untagged
@@ -3627,7 +3628,7 @@ Transform:
   m_GameObject: {fileID: 8374555565309963140}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.5900993, y: 0.055, z: 33.973293}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -3733,8 +3734,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 480511063780299815}
   animator: {fileID: 8804065915984873863}
+  playerDetector: {fileID: 2571654685180119974}
   baseStats: {fileID: 11400000, guid: 19350cf8dc571354e982326fd2f468d8, type: 2}
   wanderRadius: 10
+--- !u!114 &2571654685180119974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8374555565309963140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 905a86d1a3dd4a0f922200c98d26d6b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionAngle: 60
+  detectionRadius: 10
+  innerDetectionRadius: 5
+  detectionCooldown: 1
 --- !u!1 &8411474887594872558
 GameObject:
   m_ObjectHideFlags: 0

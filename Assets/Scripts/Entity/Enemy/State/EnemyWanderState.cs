@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 namespace Entity.Enemy.State
 {
-    public class EnemyWanderState : EnemyBaseState  //TODO: нужно делать дочерные стейты - отдельно для EnemyState, отдельно для PropToggle и тп 
+    public class EnemyWanderState : EnemyBaseState  // TODO: нужно делать дочерные стейты - отдельно для EnemyState, отдельно для PropToggle и тп 
     {
         private readonly float _wanderRadius;
         private readonly Vector3 _startPoint;

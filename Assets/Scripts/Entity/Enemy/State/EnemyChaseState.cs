@@ -1,15 +1,16 @@
-﻿using UnityEngine;
+﻿using Entity.Player;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Entity.Enemy.State
 {
     public class EnemyChaseState : EnemyBaseState
     {
-        private readonly Transform player;
+        private readonly PlayerManager _player;
         
-        public EnemyChaseState(EnemyManager enemy, Animator animator, NavMeshAgent agent, Transform player) : base(enemy, animator, agent)
+        public EnemyChaseState(EnemyManager enemy, Animator animator, NavMeshAgent agent, PlayerManager player) : base(enemy, animator, agent)
         {
-            this.player = player;
+            _player = player;
         }
 
         public override void OnEnter()
@@ -20,7 +21,7 @@ namespace Entity.Enemy.State
 
         public override void Update()
         {
-            agent.SetDestination(player.position);
+            agent.SetDestination(_player.Position);
         }
     }
 }

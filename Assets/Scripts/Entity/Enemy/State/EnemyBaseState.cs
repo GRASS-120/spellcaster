@@ -13,6 +13,8 @@ namespace Entity.Enemy.State
         protected static readonly int IdleHash = Animator.StringToHash("Idle");
         protected static readonly int WalkHash = Animator.StringToHash("Walk");
         protected static readonly int RunHash = Animator.StringToHash("Run");
+        protected static readonly int AttackHash = Animator.StringToHash("Attack");
+        protected static readonly int DeathHash = Animator.StringToHash("Death");
         
         protected const float CrossFadeDuration = 0.1f;
 
@@ -25,22 +27,22 @@ namespace Entity.Enemy.State
 
         public virtual void OnEnter()
         {
-            throw new System.NotImplementedException();
+            // nope
         }
 
         public virtual void Update()
         {
-            throw new System.NotImplementedException();
+            // nope
         }
 
         public virtual void FixedUpdate()
         {
-            throw new System.NotImplementedException();
+            // nope
         }
 
         public virtual void OnExit()
         {
-            throw new System.NotImplementedException();
+            // nope
         }
     }
 }

@@ -34,6 +34,7 @@ namespace Entity.Player
 
         public PlayerInputManager Input => input;
         public PlayerController PlayerController => playerController;
+        public Vector3 Position => playerController.transform.position;
         public Stance Stance => playerController.State.Stance;
         public PlayerCamera Camera => playerCamera;
         public PlayerInteractor Interactor => _interactor;

@@ -15,6 +15,6 @@ MonoBehaviour:
   hp: 100
   mana: 100
   attack: 10
-  attackSpeed: 5
-  moveSpeed: 8
+  attackSpeed: 1
+  moveSpeed: 4
   defence: 20

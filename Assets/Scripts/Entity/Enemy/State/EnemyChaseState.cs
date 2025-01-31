@@ -15,13 +15,25 @@ namespace Entity.Enemy.State
 
         public override void OnEnter()
         {
+            // TODO: СДЕЛАТЬ СКОРОСТЬ СПРИНТА В СТАТАХ
             Debug.Log("chase");
+            
+            var tmp = agent.speed;
+            agent.speed = tmp * 2;
+            
             animator.CrossFade(RunHash, CrossFadeDuration);
         }
 
         public override void Update()
         {
             agent.SetDestination(_player.Position);
+        }
+
+        public override void OnExit()
+        {
+            // TODO: СДЕЛАТЬ СКОРОСТЬ СПРИНТА В СТАТАХ
+            var tmp = agent.speed;
+            agent.speed = tmp / 2;
         }
     }
 }

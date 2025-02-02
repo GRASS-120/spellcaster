@@ -3,6 +3,7 @@ using Entity.Player.Interaction;
 using Entity.Player.VFX;
 using Interactable;
 using StatsManager;
+using StatsManager.LocalStats;
 using StatsManager.StatsTypes;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -17,7 +18,7 @@ namespace Entity.Player
     /// Связывает PlayerCharacter, PlayerInputManager и PlayerCamera. То есть, получаем команду от игрока
     /// после нажатия на кнопку => формируем запрос с измененными данными => меняються значения в камере и в персонаже
     /// </summary>
-    public class PlayerManager : MonoBehaviour, IEntity, IItemVisitable
+    public class PlayerManager : MonoBehaviour, IEntity, IItemVisitable, IHealthComponent
     {
         // TODO: LOCAL INSTANCE OF HP AND MANA! 
         
@@ -31,6 +32,7 @@ namespace Entity.Player
         [SerializeField] private StanceVignette stanceVignette;
 
         public Stats Stats { get; set; }
+        public float Hp { get; set; }
 
         public PlayerInputManager Input => input;
         public PlayerController PlayerController => playerController;
@@ -44,8 +46,8 @@ namespace Entity.Player
         private void Awake()
         {
             _interactor = GetComponent<PlayerInteractor>();
-            // base.Awake();
             Stats = new Stats(new StatsMediator(), baseStats);
+            Hp = Stats.MaxHp;
         }
 
         private void Start()
@@ -85,6 +87,7 @@ namespace Entity.Player
             playerController.UpdateBody(Time.deltaTime);
             
             Debug.Log(Stats);
+            Debug.Log(Hp);
         }
 
         // изменять камеру лучше в LateUpdate
@@ -103,6 +106,17 @@ namespace Entity.Player
         public void Accept(IItemVisitor visitor)
         {
             visitor.Visit(this);
+        }
+        
+        public void TakeDamage(float damage)
+        {
+            Hp -= damage;
+
+            if (Hp <= 0)
+            {
+                // to death state
+                Debug.Log("player dead");
+            }
         }
     }
 }

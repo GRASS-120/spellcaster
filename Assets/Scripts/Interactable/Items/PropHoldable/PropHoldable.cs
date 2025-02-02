@@ -19,7 +19,6 @@ namespace Interactable.Items.PropHoldable
         
         private void Start()
         {
-            itemManager.OnItemAction += HandleAction;
             OnPickupItem += OnPickupItem_Callback;
             OnDropItem += OnDropItem_Callback;
         }
@@ -35,13 +34,13 @@ namespace Interactable.Items.PropHoldable
             base.Interact(player);
         }
 
-        protected override void HandleAction(PlayerManager player)
+        public override void HandleAction(PlayerManager player)
         {
             var modifier = GetStatModifier();
             modifier.DisableModifierEffect(player, this);
             
             itemManager.StopClipping();
-            itemManager.ThrowObject();
+            itemManager.ThrowObject();  // проекция (boxcast)
         }
         
         private void OnPickupItem_Callback(PlayerManager player)

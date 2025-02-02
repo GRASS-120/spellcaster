@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69d73d8deed4e0e97c1ad1c0de6f415, type: 3}
   m_Name: Player_BaseStats
   m_EditorClassIdentifier: 
-  attack: 10
+  maxHp: 100
+  maxMana: 100
+  attackDamage: 10
+  attackSpeed: 1
+  moveSpeed: 8
   defence: 20

@@ -1,10 +1,8 @@
 ﻿using Entity.Player;
-using Interactable.Items;
-using Player;
 using Player.Items;
 using UnityEngine;
 
-namespace Interactable
+namespace Interactable.Items.Tool
 {
     [RequireComponent(typeof(Rigidbody))]
     public class Tool : Item
@@ -13,13 +11,14 @@ namespace Interactable
         
         private void Awake()
         {
+            Debug.Log("!!!");
             _toolData = (ToolSO) itemData;
         }
         
-        private void Start()
-        {
-            itemManager.OnItemAction += HandleAction;
-        }
+        // private void Start()
+        // {
+        //     itemManager.OnItemAction += HandleAction;
+        // }
         
         // public override void Interact(PlayerManager player)
         // {
@@ -31,8 +30,9 @@ namespace Interactable
         //     Debug.Log("!!!");
         // }
         
-        protected override void HandleAction(PlayerManager player)
+        public override void HandleAction(PlayerManager player)
         {
+            Debug.Log("kinut tool");
             itemManager.StopClipping();
             itemManager.ThrowObject();
         }

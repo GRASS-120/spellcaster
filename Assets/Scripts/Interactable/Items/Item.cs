@@ -1,4 +1,5 @@
 ﻿using System;
+using Entity.Enemy;
 using Entity.Player;
 using Entity.Player.Interaction;
 using Player;
@@ -20,13 +21,19 @@ namespace Interactable.Items
     {
         public event Action<PlayerManager> OnDropItem;
         public event Action<PlayerManager> OnPickupItem;
+
+        // itemManager OnActionIteem срабатьывает для всех предметов на сцене!!! то есть бросил предмет, а HandleAction 
+        // отработал столько рас, сколько предметов на сцене... но при этом с ними ничего не происходит... мб это норм
+        // => пофиксил тем, что подписываюсь на OnItemAction в самом PlayerItemManager, причем подписываю только HeldItem
+        // => теперь и в Start не нужно у всех подписываться + имеет смысл переписывать HandleAction
+        // но при этом OnDropItem и OnPickupItem работает правильно, так как в рамках одного экземпляра вызывается
         
         [Header("Entities")]
-        public PlayerItemManager itemManager;
-        public ItemSO itemData;
+        [SerializeField] protected PlayerItemManager itemManager;
+        [SerializeField] protected ItemSO itemData;
 
         private PlayerManager _player;
-
+        
         public virtual void Interact(PlayerManager player)
         {
             if (itemManager.HeldItem == null)
@@ -44,7 +51,7 @@ namespace Interactable.Items
                 }
             }
         }
-
+        
         public virtual void AltInteract(PlayerManager player)
         {
             Debug.Log("alt interaction with " + gameObject.name);
@@ -55,14 +62,8 @@ namespace Interactable.Items
             _player = player;
         }
         
-        protected virtual void HandleAction(PlayerManager player)
+        public virtual void HandleAction(PlayerManager player)
         {
-            // Debug.Log("override handle action!");
-        }
-        
-        protected virtual void HandleAction()
-        {
-            // Debug.Log("override handle action!");
         }
     }
 }

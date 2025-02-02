@@ -1,10 +1,11 @@
 ﻿namespace StatsManager.StatsTypes
 {
+    // TODO: мб сюда записывать вообще ВСЕ статы? не общие, а прям все. а то наследования нет у енамов
     public enum StatType 
     {
-        HP,
-        Mana,
-        Attack,
+        MaxHp,
+        MaxMana,
+        AttackDamage,
         AttackSpeed,
         MoveSpeed,
         Defence
@@ -22,26 +23,26 @@
         }
 
         /// <summary>
-        /// Очки здоровья
+        ///Максимальное количество очков здоровья
         /// </summary>
-        public float HP
+        public float MaxHp
         {
             get
             {
-                var q = new Query(StatType.HP, BaseStats.hp);
+                var q = new Query(StatType.MaxHp, BaseStats.maxHp);
                 Mediator.PerformQuery(this, q);
                 return q.Value;
             }
         }
-
+        
         /// <summary>
-        /// Очки маны
+        ///Максимальное количество очков маны
         /// </summary>
-        public float Mana
+        public float MaxMana
         {
             get
             {
-                var q = new Query(StatType.Mana, BaseStats.mana);
+                var q = new Query(StatType.MaxMana, BaseStats.maxMana);
                 Mediator.PerformQuery(this, q);
                 return q.Value;
             }
@@ -50,11 +51,11 @@
         /// <summary>
         /// Сила атаки
         /// </summary>
-        public float Attack
+        public float AttackDamage
         {
             get
             {
-                var q = new Query(StatType.Attack, BaseStats.attack);
+                var q = new Query(StatType.AttackDamage, BaseStats.attackDamage);
                 Mediator.PerformQuery(this, q);
                 return q.Value;
             }
@@ -101,7 +102,7 @@
 
         public override string ToString() 
         {
-            return $"HP: {HP}, Mana: {Mana}, Attack: {Attack}, AttackSpeed: {AttackSpeed}, " +
+            return $"MaxHp: {MaxHp}, MaxMana: {MaxMana}, Attack: {AttackDamage}, AttackSpeed: {AttackSpeed}, " +
                    $"MoveSpeed: {MoveSpeed}, Defence: {Defence}";
         }
     }

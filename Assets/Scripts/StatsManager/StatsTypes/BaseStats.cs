@@ -2,16 +2,15 @@
 
 namespace StatsManager.StatsTypes
 {
-    // TODO: сделать asset menu в дочерних только -> пока пох на разделение статов.
-    
+    // TODO: проблема этой системы в том, что ее очень проблемно расширять (например сделать разный набор статов, условно
+    // отдельно для игрока и отедльно для врага... пока я на это забью, так как игра не про это, но как исправить?
     [CreateAssetMenu(fileName = "BaseStats", menuName = "Scriptable Objects/Stats/BaseStats", order = 0)]
     public class BaseStats : ScriptableObject
     {
-        // local
-        public float hp = 100;
-        public float mana = 100;
+        public float maxHp = 100;
+        public float maxMana = 100;
         [Space][Space]
-        public float attack = 10;
+        public float attackDamage = 10;
         public float attackSpeed = 5;
         [Space][Space]
         public float moveSpeed = 8;

@@ -1,4 +1,5 @@
 ﻿using System;
+using Entity.Enemy;
 using Entity.Player;
 using Entity.Player.Interaction;
 using Player;
@@ -17,6 +18,11 @@ namespace Interactable.PropsStatic
             OnPropAction?.Invoke(player);
             // + sound + anim?
             Debug.Log("!");
+        }
+
+        public void Interact(EnemyManager enemy)
+        {
+            Debug.Log("enemy interact with prop-static (poh)");
         }
 
         public void AltInteract(PlayerManager player)

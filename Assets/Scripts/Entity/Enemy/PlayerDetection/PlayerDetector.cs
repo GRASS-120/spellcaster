@@ -42,6 +42,23 @@ namespace Entity.Enemy.PlayerDetection
             return dirToPlayer.magnitude <= attackRange;
         }
 
+        // TODO: нужно доработать логику: сейчас он наносит урон в самом начале атаки (когда только замах начинается)
+        // и увернуться получается только если справа обойти. 
+        // нужно чтобы он проверял урон в момент, когда будет сам удар. как это сделать? вроде у анимаций можно тригерры ставить и на
+        // них события вешать, чтобы когда анимация достигает опред момента - обработать событие
+        public bool CanDamagePlayer()
+        {
+            var dirToPlayer = Player.Position - transform.position;
+    
+            if (!CanAttackPlayer())
+                return false;
+    
+            float angleToPlayer = Vector3.Angle(transform.forward, dirToPlayer);
+
+            // Если угол меньше порогового – игрок находится перед врагом.
+            return (angleToPlayer <= detectionAngle / 2f) ;
+        }
+
         public void SetDetectionStrategy(IDetectionStrategy detectionStrategy) =>
             _detectionStrategy = detectionStrategy;
 

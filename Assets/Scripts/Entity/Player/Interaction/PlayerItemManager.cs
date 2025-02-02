@@ -5,6 +5,7 @@ using Interactable;
 using Interactable.Items;
 using Interactable.Items.Pickup;
 using Interactable.Items.PropHoldable;
+using Interactable.Items.Tool;
 using UnityEngine;
 using Utils;
 
@@ -33,7 +34,10 @@ namespace Entity.Player.Interaction
     
     public class PlayerItemManager : MonoBehaviour
     {
-        public event Action<PlayerManager> OnItemAction;  // пока пох на props? - нет | нужно пробрасывать функции сюда
+        /// <summary>
+        /// Действие предмета при нажатии ЛКМ
+        /// </summary>
+        public event Action<PlayerManager> OnItemAction;
         public event Action OnHeldItemChanged;
         
         [Header("Entities")]
@@ -70,7 +74,7 @@ namespace Entity.Player.Interaction
             OnHeldItemChanged += HandleItemView;
         }
 
-        public virtual void Update()
+        private void Update()
         {
             if (_heldItem != null)
             {
@@ -128,15 +132,14 @@ namespace Entity.Player.Interaction
                 _heldItem.transform.localRotation = Quaternion.identity;
                 _heldItemRb = pickUpItem.GetComponent<Rigidbody>();
                 _heldItemRb.isKinematic = true;
-                //_heldItemRb.mass = player.PlayerController.Motor.SimulatedCharacterMass;  // чтобы не расталкивал объекты за счет увеличения массы
                 _heldItemRb.transform.parent = _currentItemView.point;
                 _heldItemRb.interpolation = RigidbodyInterpolation.Interpolate;
-                _heldItem.gameObject.layer = _holdLayer; 
-                // make sure object doesnt collide with player, it can cause weird bugs
-                //Physics.IgnoreCollision(_heldItem.GetComponent<Collider>(), player.PlayerCollider);
+                _heldItem.gameObject.layer = _holdLayer;
+                //Physics.IgnoreCollision(_heldItem.GetComponent<Collider>(), player.PlayerCollider); - не работает почему-то, пришлось через матрицу коллизий
                 
-                player.Accept(pickUpItem);  // !
+                player.Accept(pickUpItem);
                 OnHeldItemChanged?.Invoke();
+                OnItemAction += _heldItem.HandleAction;
             }
         }
 
@@ -148,9 +151,12 @@ namespace Entity.Player.Interaction
             _heldItem.gameObject.layer = 0;
             _heldItemRb.isKinematic = false;
             _heldItem.transform.parent = null; 
-            _heldItem = null; 
-            OnHeldItemChanged?.Invoke();
+            
+            OnItemAction -= _heldItem.HandleAction;
 
+            _heldItem = null; 
+            
+            OnHeldItemChanged?.Invoke();
         }
 
         public void MoveObject()
@@ -193,15 +199,19 @@ namespace Entity.Player.Interaction
         {
             if (_heldItem == null) return;
             
+            
             //same as drop function, but add force to object before undefining it
             //Physics.IgnoreCollision(_heldItem.GetComponent<Collider>(), player.PlayerCollider, false);
             _heldItem.gameObject.layer = 0;
             _heldItemRb.isKinematic = false;
             _heldItem.transform.parent = null;
             _heldItemRb.AddForce(player.Camera.transform.forward * throwForce);
-            _heldItem = null;
-            OnHeldItemChanged?.Invoke();
+            
+            OnItemAction -= _heldItem.HandleAction;
 
+            _heldItem = null;
+            
+            OnHeldItemChanged?.Invoke();
         }
         
         public void StopClipping() //function only called when dropping/throwing
@@ -224,7 +234,6 @@ namespace Entity.Player.Interaction
         public void Consume(Item item)
         {
             player.Accept(item);
-            // item.itemData.modifiers.ApplyModifierEffect(player, this);
             Destroy(item.gameObject);
         }
     }

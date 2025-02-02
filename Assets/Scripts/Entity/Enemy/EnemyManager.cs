@@ -1,6 +1,7 @@
 ﻿using System;
 using Entity.Enemy.PlayerDetection;
 using Entity.Enemy.State;
+using Entity.Player;
 using FiniteStateMachine;
 using StatsManager;
 using StatsManager.StatsTypes;
@@ -13,7 +14,7 @@ using Utils;
 // TODO: 1) анимации вынести в отдельный скрипт и сделать с аниматором, а не через код 
 // TODO: 2) использовать стейт машину именно для логики, а не анимаций (?????) хотя если добавить в Attack вызов функции для
 // TODO: нанесения урона, то уже и не путаница получается... хм... надо бы спросить
-// TODO: исправить кринж-повороты в анимациях...
+// TODO: исправить кринж-повороты в анимациях?...
 
 namespace Entity.Enemy
 {
@@ -28,7 +29,6 @@ namespace Entity.Enemy
         [Header("Params")]
         [SerializeField] private BaseStats baseStats;
         [SerializeField] private float wanderRadius = 10f;
-        // [SerializeField] private float attackSpeed = 1f;
 
         public Stats Stats { get; set; }
 
@@ -37,7 +37,7 @@ namespace Entity.Enemy
 
         private void Start()
         {
-            Stats = new Stats(new StatsMediator(), baseStats);  // TODO: СДЕЛАТЬ СКОРОСТЬ АГЕНТА ТАКОЙ ЖЕ КАКАЯ И В СТАТАХ!
+            Stats = new Stats(new StatsMediator(), baseStats); 
             _stateMachine = new StateMachine();
             _attackTimer = new CountdownTimer(Stats.AttackSpeed);
 
@@ -76,7 +76,7 @@ namespace Entity.Enemy
             _stateMachine.FixedUpdate();
         }
         
-        public void HandleAttack()
+        public void HandleAttack(PlayerManager player)
         {
             // если враг атакует в текущий момент, то скип
             if (_attackTimer.IsRunning) return;
@@ -84,7 +84,9 @@ namespace Entity.Enemy
             // если атаки нет, то запускаем таймер
             _attackTimer.Start();
             
-            // take damage func
+            if (playerDetector.CanDamagePlayer()) 
+                player.TakeDamage(Stats.AttackDamage);
+
             Debug.Log("attacking");
         }
 

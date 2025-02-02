@@ -14,11 +14,6 @@ namespace Interactable.Items.Equipment
             _equipmentData = (EquipmentSO) itemData;
         }
 
-        private void Start()
-        {
-            itemManager.OnItemAction += HandleAction;
-        }
-
         public override void Interact(PlayerManager player)
         {
             itemManager.Consume(this);

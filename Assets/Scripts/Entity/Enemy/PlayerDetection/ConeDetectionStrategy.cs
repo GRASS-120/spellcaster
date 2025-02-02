@@ -2,6 +2,8 @@
 using UnityEngine;
 using Utils;
 
+// хз зачем автор все так усложнил и добавил паттерн этот... хотя сам паттерн весьма очевидный и понятный,
+// я ведь оказвается его уже использовал, просто не знал об этом
 namespace Entity.Enemy.PlayerDetection
 {
     public class ConeDetectionStrategy : IDetectionStrategy

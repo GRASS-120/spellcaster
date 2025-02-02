@@ -35,7 +35,7 @@ namespace Entity.Enemy.State
                 );
             }
 
-            enemy.HandleAttack();
+            enemy.HandleAttack(_player);
         }
         
         public override void OnExit()
